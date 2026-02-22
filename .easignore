@@ -1,0 +1,49 @@
+# EAS Build ignore file
+# Same as .gitignore BUT keeps .env so API keys are available during cloud build
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# NOTE: .env is NOT excluded here (unlike .gitignore)
+# EAS Build needs .env for EXPO_PUBLIC_ variables
+
+# typescript
+*.tsbuildinfo
+
+# generated native folders
+/ios
+/android
+
+# learning docs (not needed for build)
+learning/
+
+# temp files
+.tmp/
+_dns-fix.js
