@@ -21,8 +21,12 @@ export async function initializePurchases(userId?: string): Promise<void> {
     Purchases.setLogLevel(LOG_LEVEL.DEBUG);
   }
 
-  await Purchases.configure({ apiKey, appUserID: userId ?? undefined });
-  isConfigured = true;
+  try {
+    await Purchases.configure({ apiKey, appUserID: userId ?? undefined });
+    isConfigured = true;
+  } catch (error) {
+    console.error('RevenueCat configure failed:', error);
+  }
 }
 
 export async function getOfferings(): Promise<PurchasesPackage[]> {

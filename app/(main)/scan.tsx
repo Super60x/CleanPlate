@@ -27,10 +27,10 @@ export default function ScanScreen() {
   const [state, setState] = useState<ScanState>('pick');
 
   useEffect(() => {
-    if (!subLoading && !isPremium && !isTrialing) {
+    if (!subLoading && !isPremium && !isTrialing && user) {
       router.replace('/(main)/paywall');
     }
-  }, [subLoading, isPremium, isTrialing]);
+  }, [subLoading, isPremium, isTrialing, user]);
   const [scanMode, setScanMode] = useState<ScanMode>('single');
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [imageUris, setImageUris] = useState<string[]>([]);
