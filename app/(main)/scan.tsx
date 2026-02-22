@@ -26,12 +26,11 @@ export default function ScanScreen() {
   const { isPremium, isTrialing, isLoading: subLoading } = useSubscription();
   const [state, setState] = useState<ScanState>('pick');
 
-  // TODO: Re-enable paywall gate once RevenueCat products are configured
-  // useEffect(() => {
-  //   if (!subLoading && !isPremium && !isTrialing) {
-  //     router.replace('/(main)/paywall');
-  //   }
-  // }, [subLoading, isPremium, isTrialing]);
+  useEffect(() => {
+    if (!subLoading && !isPremium && !isTrialing) {
+      router.replace('/(main)/paywall');
+    }
+  }, [subLoading, isPremium, isTrialing]);
   const [scanMode, setScanMode] = useState<ScanMode>('single');
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [imageUris, setImageUris] = useState<string[]>([]);
