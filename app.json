@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.cleanplate.app"
+      "bundleIdentifier": "com.cleanplateai.app"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +23,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": false,
-      "package": "com.cleanplate.app"
+      "package": "com.cleanplateai.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
