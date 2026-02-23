@@ -3,7 +3,7 @@ import Purchases, { LOG_LEVEL, PurchasesPackage, CustomerInfo } from 'react-nati
 import { RC_GOOGLE_KEY, RC_APPLE_KEY } from './config';
 import type { SubscriptionStatus } from '../types';
 
-const ENTITLEMENT_ID = 'premium';
+const ENTITLEMENT_ID = 'Clean Plate Premium';
 
 let isConfigured = false;
 
