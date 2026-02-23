@@ -9,7 +9,7 @@ import { useSubscription } from '../../contexts/SubscriptionContext';
 
 export default function PaywallScreen() {
   const router = useRouter();
-  const { refreshStatus } = useSubscription();
+  const { isPremium, isTrialing, refreshStatus } = useSubscription();
   const [packages, setPackages] = useState<PurchasesPackage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isPurchasing, setIsPurchasing] = useState(false);
@@ -47,6 +47,18 @@ export default function PaywallScreen() {
       setIsPurchasing(false);
     }
   };
+
+  // Auto-dismiss if user is already premium (e.g. purchased but got stuck)
+  useEffect(() => {
+    if (isPremium || isTrialing) {
+      router.back();
+    }
+  }, [isPremium, isTrialing]);
+
+  // Re-check subscription on mount in case purchase completed but state is stale
+  useEffect(() => {
+    refreshStatus();
+  }, []);
 
   const handleRestore = async () => {
     setIsPurchasing(true);

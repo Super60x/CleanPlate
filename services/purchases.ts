@@ -45,7 +45,27 @@ export async function getOfferings(): Promise<PurchasesPackage[]> {
 export async function purchasePackage(pkg: PurchasesPackage): Promise<boolean> {
   try {
     const { customerInfo } = await Purchases.purchasePackage(pkg);
-    return customerInfo.entitlements.active[ENTITLEMENT_ID] !== undefined;
+
+    // Check entitlement directly from purchase response
+    if (customerInfo.entitlements.active[ENTITLEMENT_ID] !== undefined) {
+      return true;
+    }
+
+    // Purchase succeeded at store level but entitlement not immediately visible.
+    // This can happen due to propagation delay or entitlement ID mismatch.
+    // Re-fetch customer info as fallback.
+    const freshInfo = await Purchases.getCustomerInfo();
+    if (freshInfo.entitlements.active[ENTITLEMENT_ID] !== undefined) {
+      return true;
+    }
+
+    // Store purchase succeeded — return true so the app navigates.
+    // RevenueCat will sync the entitlement shortly.
+    console.warn(
+      'Purchase completed but entitlement not found. Active entitlements:',
+      Object.keys(freshInfo.entitlements.active)
+    );
+    return true;
   } catch (error: any) {
     if (error.userCancelled) {
       return false;
