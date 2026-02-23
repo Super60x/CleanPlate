@@ -23,7 +23,7 @@
 | 4.5 | Hybrid Nutrition + UX | DONE | USDA FoodData Central integration, loading UX, macro legend, Top Picks hero section |
 | 5 | UX Fixes + Multi-Page Scanning | DONE | USDA bug fix, multi-page scanning, scan naming, menu verdict, photo display, preferences warning |
 | 5.5 | App Store Prep | DONE | Firestore security rules, account deletion link, app icon SVG |
-| 6 | Subscriptions + RevenueCat | IN PROGRESS | EAS build done, firebase.ts fixed, DNS resolved. RevenueCat dashboard + testing NEXT |
+| 6 | Subscriptions + RevenueCat | IN PROGRESS | 6A: EAS build + firebase fix. 6B: Play Store + RC dashboard. 6C: Offerings fix. Sandbox purchase testing NEXT |
 | 7 | Sharing + Polish + TestFlight | PENDING | Sharing, UI overhaul, App Store assets, EAS Build upload |
 
 ---
@@ -423,38 +423,48 @@ RevenueCat's `react-native-purchases` SDK requires a native build (EAS Build). W
 - **SubscriptionContext** wraps the app in `_layout.tsx` with 5-second timeout (won't block app if RevenueCat is unreachable)
 - **Paywall UI complete** — plan selection (monthly/annual), purchase flow, restore purchases, legal text
 
-### What Remains (Day 6B — RevenueCat Configuration + Testing)
+### What Was Done (Day 6B — Play Store + RevenueCat Dashboard)
+- [x] Google Play Console enrollment completed
+- [x] Production AAB built and uploaded to Google Play Console
+- [x] Subscription products created in Google Play Console (`cleanplate_premium_monthly`, `cleanplate_premium_annual`)
+- [x] RevenueCat app "Clean Plate" created and connected to Google Play (service account JSON uploaded)
+- [x] Products, entitlements (`premium`), and offering (`default`) configured in RevenueCat
+- [x] RevenueCat API key added to `.env` (`EXPO_PUBLIC_RC_GOOGLE_KEY=goog_ohEBb...`)
+- [x] Service account credentials validated (3 green checks in RevenueCat)
+- See `learning/day6b-play-store-revenuecat-setup.md` for full setup guide
 
-**Pre-requisites (manual, outside code):**
-1. [ ] **Fix phone DNS permanently** — Android Settings > Private DNS > `dns.google` (or fix router DNS to `8.8.8.8`)
-2. [ ] **Finish Google Play Console enrollment** — required to create subscription products
-3. [ ] **Check Apple Developer enrollment status** — blocker for iOS builds
+### What Was Done (Day 6C — Offerings Fix)
+- [x] Diagnosed grayed-out "Start 7-Day Free Trial" button — products were under wrong RevenueCat app (Test Store vs Clean Plate)
+- [x] Moved all products, entitlements, and offerings to the correct Clean Plate app
+- [x] Fixed offering packages not linked to products (Associated Offerings showed "No associated offerings")
+- [x] Button now active — paywall shows plans with real prices from Google Play
+- [x] Discovered "item not found" error when attempting purchase — APK not uploaded to Google Play testing track
+- See `learning/day6c-revenuecat-offerings-sandbox.md` for full diagnosis
 
-**RevenueCat Dashboard Setup:**
-4. [ ] Create app in RevenueCat dashboard (Android first)
-5. [ ] Connect Google Play Console to RevenueCat (service account JSON)
-6. [ ] Create products in Google Play Console: monthly (€9.99) + annual (€69.99)
-7. [ ] Create offering in RevenueCat with both packages
-8. [ ] Add API keys to `.env`: `EXPO_PUBLIC_RC_GOOGLE_KEY=<key>`
+### What Remains (Day 6D — Sandbox Purchase Testing)
 
-**Testing:**
-9. [ ] Build new development APK (must commit current changes first):
-   ```bash
-   git add . && git commit -m "Day 6: EAS build fixes + firebase AsyncStorage + RevenueCat integration"
-   NODE_OPTIONS="--require ./_dns-fix.js" eas build --platform android --profile development --non-interactive
-   ```
-10. [ ] Install new APK on phone
-11. [ ] Verify paywall screen loads offerings from RevenueCat
-12. [ ] Test sandbox purchase flow (Google Play Console test account)
-13. [ ] Verify `isPremium` / `isTrialing` state updates correctly
-14. [ ] Test feature gating (scan should be blocked after trial without subscription)
+**CRITICAL — Fix "item not found" error (must do first):**
+1. [ ] Build production AAB: `NODE_OPTIONS="--require ./_dns-fix.js" eas build --platform android --profile production --non-interactive`
+2. [ ] Upload AAB to Google Play Console → **Internal Testing** track → Create release → Publish
+3. [ ] Add your Google account email as a **tester** on the Internal Testing track (Testers tab → create email list → add your email)
+4. [ ] Verify your Google account is a **license tester** (Play Console → Settings → License testing → add email)
+5. [ ] Wait 10-30 minutes for Google Play to process the internal testing release
+6. [ ] Install the app (either from Internal Testing opt-in link, or sideload the same-signed APK)
+7. [ ] Open app → hit paywall → tap "Start 7-Day Free Trial" → Google Play sandbox dialog should appear
+8. [ ] Complete sandbox purchase — verify no real charge
 
-**iOS (when Apple Developer enrollment is approved):**
-15. [ ] Add iOS products in App Store Connect
-16. [ ] Connect App Store Connect to RevenueCat
-17. [ ] Add `EXPO_PUBLIC_RC_APPLE_KEY` to `.env`
-18. [ ] `eas build --platform ios --profile development`
-19. [ ] Test on iOS device/TestFlight
+**After purchase works:**
+9. [ ] Verify `isPremium` or `isTrialing` = true after purchase (scan screen should load instead of paywall)
+10. [ ] Test restore purchases (log out → log in → restore → subscription recognized)
+11. [ ] Test with a completely fresh account (should hit paywall → purchase → access)
+12. [ ] Test subscription expiry behavior (sandbox subscriptions expire quickly for testing)
+
+**iOS (BLOCKED — Apple Developer enrollment pending):**
+13. [ ] Add iOS products in App Store Connect
+14. [ ] Connect App Store Connect to RevenueCat
+15. [ ] Add `EXPO_PUBLIC_RC_APPLE_KEY` to `.env`
+16. [ ] `eas build --platform ios --profile development`
+17. [ ] Test on iOS device/TestFlight
 
 ### Files Created (Day 6)
 ```
@@ -462,6 +472,8 @@ services/purchases.ts              — RevenueCat SDK wrapper (configure, offeri
 contexts/SubscriptionContext.tsx    — Subscription state (isPremium, isTrialing, refreshStatus)
 app/(main)/paywall.tsx             — Paywall UI (plan cards, benefits, purchase, restore, legal)
 learning/day6-eas-build-fixes.md   — 5 issues diagnosed and fixed (Google Drive, git, IPv6, tar, phone DNS)
+learning/day6b-play-store-revenuecat-setup.md — Full Play Store + RevenueCat setup guide with service account walkthrough
+learning/day6c-revenuecat-offerings-sandbox.md — Offerings fix diagnosis + sandbox testing guide
 _dns-fix.js                        — IPv4 DNS preload for EAS CLI (gitignored, easignored)
 eas.json                           — Build profiles: development (APK), preview (APK), production
 ```
@@ -478,14 +490,6 @@ app.json                           — Added scheme, bundleIdentifier, package, 
 package.json                       — Added expo-dev-client, react-native-purchases, @react-native-async-storage/async-storage
 ```
 
-### Uncommitted Changes (must commit before next build)
-```
-contexts/SubscriptionContext.tsx    — Timeout protection for RevenueCat init
-learning/day6-eas-build-fixes.md   — Added Issue 5 (phone DNS)
-services/firebase.ts               — initializeAuth with AsyncStorage (was getAuth)
-services/purchases.ts              — Error handling improvements
-```
-
 ### Verified
 - [x] EAS Build succeeds (development profile, Android APK)
 - [x] App installs and launches on physical Android device
@@ -495,9 +499,12 @@ services/purchases.ts              — Error handling improvements
 - [x] All existing features work (scan, analysis, history, preferences)
 - [x] RevenueCat SDK imports without crashing (graceful fallback when not configured)
 - [x] Paywall UI renders correctly
-- [ ] RevenueCat configured in dashboard (NEXT)
-- [ ] Sandbox purchase tested (NEXT)
-- [ ] Feature gating enforced (NEXT)
+- [x] RevenueCat configured in dashboard (products, entitlements, offerings)
+- [x] Paywall loads offerings and shows plan cards with prices
+- [x] Feature gating works (non-premium users redirected to paywall)
+- [ ] Sandbox purchase flow ("item not found" — need APK on Play Console Internal Testing track)
+- [ ] Subscription status updates after purchase
+- [ ] Restore purchases flow
 - [ ] iOS build (BLOCKED — Apple Developer enrollment pending)
 
 ### Lessons Learned
@@ -617,12 +624,40 @@ CleanFoodFinder/
 
 ## How to Resume Development
 
-### For Day 6B (RevenueCat config + testing):
-1. **Phone first:** Set Android Private DNS to `dns.google` if not already done
-2. Open terminal in `CleanFoodFinder/` directory
-3. Commit pending changes: `git add . && git commit -m "Day 6A: EAS build fixes + firebase AsyncStorage + RevenueCat code"`
-4. Follow Day 6B checklist in the Day 6 section above
-5. Check `learning/day6-eas-build-fixes.md` for all DNS/build gotchas
+### For Day 6D (Sandbox Purchase Testing — NEXT SESSION):
+
+**Context:** Paywall UI works, offerings load, button is active. But tapping "Start 7-Day Free Trial" gives "item not found" because the APK hasn't been uploaded to a Google Play testing track yet.
+
+**Step-by-step:**
+1. **Phone DNS:** Ensure Android Private DNS is set to `dns.google`
+2. **Build production AAB:**
+   ```bash
+   cd C:\Users\Gebruiker\Dev\CleanPlate
+   NODE_OPTIONS="--require ./_dns-fix.js" eas build --platform android --profile production --non-interactive
+   ```
+3. **Upload AAB to Google Play Console:**
+   - Go to Play Console → Clean Plate → Test and release → Internal testing
+   - Create new release → upload the .aab file → add release notes → Save and publish
+4. **Add yourself as Internal Testing tester:**
+   - Internal testing → Testers tab → Create email list → add your Google account email
+   - Copy the opt-in link and open it on your phone to join the test
+5. **Verify license testing:** Play Console → Settings → License testing → your email should be listed
+6. **Wait 10-30 min** for Google Play to process
+7. **Install and test:** Open app → paywall → tap purchase → Google Play sandbox dialog should appear
+8. **Verify post-purchase:** After sandbox purchase, scan screen should load (isPremium = true)
+9. **Test restore:** Log out → log in → Restore Purchases → subscription should be recognized
+
+**If "item not found" persists after upload:**
+- Verify package name matches exactly: `com.cleanplateai.app`
+- Verify product IDs match: `cleanplate_premium_monthly` / `cleanplate_premium_annual`
+- Check that subscriptions in Play Console are **Active** (not Draft)
+- Make sure the base plans are also active
+- Try clearing Google Play Store cache on phone (Settings → Apps → Google Play Store → Clear cache)
+
+**After purchases work, move to Day 7:**
+- Sharing features, UI polish, App Store assets, TestFlight upload
+
+See `learning/day6c-revenuecat-offerings-sandbox.md` for full diagnosis of today's issues.
 
 ### For development builds (native, post-Expo Go):
 ```bash

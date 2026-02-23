@@ -84,7 +84,7 @@ Stay pragmatic. Stay reliable. Keep learning.
 ### Project Overview
 AI-powered restaurant menu scanner app. User photographs a menu → OCR extracts text → Claude AI analyzes dishes → health scores + nutritional breakdown for each dish.
 
-### Current Progress: Day 6 partially complete — Day 6B (RevenueCat config + testing) is NEXT
+### Current Progress: Day 6 mostly complete — Day 6D (sandbox purchase testing) is NEXT
 - **Day 1 (DONE):** Expo project + Firebase Auth (login/signup/logout)
 - **Day 2 (DONE):** Camera (expo-image-picker) + Google Cloud Vision OCR
 - **Day 3 (DONE):** Claude API health analysis + results UI + .env security fix
@@ -93,7 +93,9 @@ AI-powered restaurant menu scanner app. User photographs a menu → OCR extracts
 - **Day 5 (DONE):** USDA bug fix, multi-page scanning, scan naming, menu verdict, photo display, preferences warning
 - **Day 5.5 (DONE):** Firestore security rules, account deletion link, app icon SVG
 - **Day 6A (DONE):** EAS Build working, firebase.ts fixed for native builds, phone DNS fixed, RevenueCat code integrated, paywall UI built
-- **Day 6B (NEXT):** RevenueCat dashboard setup, Google Play products, sandbox purchase testing, feature gating
+- **Day 6B (DONE):** Google Play Console enrollment, subscription products created, RevenueCat dashboard configured, service account connected
+- **Day 6C (DONE):** Fixed offerings not loading (products were under wrong RC app "Test Store" instead of "Clean Plate"), fixed offering packages not linked to products
+- **Day 6D (NEXT):** Upload AAB to Internal Testing track, test sandbox purchases, verify subscription flow end-to-end
 - **Day 7:** Sharing, polish, TestFlight/Play Store deployment
 
 ### Platform
@@ -140,30 +142,41 @@ AI-powered restaurant menu scanner app. User photographs a menu → OCR extracts
 - Phone DNS issue diagnosed and fixed (same IPv6 issue as dev machine — use Private DNS `dns.google`)
 - RevenueCat SDK code integrated: `purchases.ts`, `SubscriptionContext.tsx`, `paywall.tsx`
 - Paywall UI complete with plan cards, purchase flow, restore, legal text
-- 4 files have uncommitted changes (must commit before next build)
 
-**NOT DONE (Day 6B — RevenueCat Configuration):**
-- RevenueCat dashboard: create app, connect Google Play, create offering
-- Google Play Console: create subscription products (monthly €9.99, annual €69.99)
-- Add `EXPO_PUBLIC_RC_GOOGLE_KEY` to `.env`
-- Build new APK with committed changes
-- Test sandbox purchase flow
-- Feature gating (block scans after trial expires)
+**DONE (Day 6B — Play Store + RevenueCat Dashboard):**
+- Google Play Console enrollment completed
+- Production AAB built and uploaded to Google Play Console
+- Subscription products created (`cleanplate_premium_monthly`, `cleanplate_premium_annual`)
+- RevenueCat app configured with products, `premium` entitlement, `default` offering
+- Service account JSON uploaded, all 3 permission checks green
+- API key in `.env`: `EXPO_PUBLIC_RC_GOOGLE_KEY=goog_ohEBb...`
+
+**DONE (Day 6C — Offerings Fix):**
+- Fixed: products were under wrong RevenueCat app ("Test Store" instead of "Clean Plate")
+- Fixed: offering packages not linked to Clean Plate products
+- Paywall now loads offerings and shows plan cards with real prices
+- Feature gating works (non-premium users redirected to paywall on scan)
+
+**NOT DONE (Day 6D — Sandbox Purchase Testing):**
+- Upload AAB to Google Play Console **Internal Testing** track (required for Google Play Billing to work)
+- Add Google account as tester on Internal Testing track
+- Test sandbox purchase flow (currently gives "item not found" error)
+- Verify subscription status updates after purchase
+- Test restore purchases flow
 - iOS build (BLOCKED — Apple Developer enrollment pending)
 
 **BLOCKERS:**
 - Apple Developer enrollment PENDING — blocker for iOS builds and App Store Connect
-- Google Play Console enrollment needs to be finished — required for subscription products
 - Firestore security rules created but NOT YET DEPLOYED — deploy via Firebase Console before launch
 
 **KEY BUILD COMMANDS:**
 ```bash
 # Commit changes first (requireCommit enforces this)
-cd C:\dev\mobile_cleaneatingmeals\CleanFoodFinder
+cd C:\Users\Gebruiker\Dev\CleanPlate
 git add . && git commit -m "Your message"
 
 # Build with IPv4 DNS fix (required on this network)
-NODE_OPTIONS="--require ./_dns-fix.js" eas build --platform android --profile development --non-interactive
+NODE_OPTIONS="--require ./_dns-fix.js" eas build --platform android --profile production --non-interactive
 ```
 
 **PHONE SETUP:**
@@ -203,20 +216,21 @@ CleanFoodFinder/
 ### Full 7-day plan reference
 See `CleanFoodFinder_7Day_DevPlan.md` in project root (located at `c:\dev\mobile_cleaneatingmeals\CleanFoodFinder_7Day_DevPlan.md`).
 
-### How to resume next session (Day 6B)
+### How to resume next session (Day 6D — Sandbox Purchase Testing)
 1. Read this CLAUDE.md for full context
 2. **Phone DNS:** Ensure Android Private DNS is set to `dns.google` before testing
-3. **Commit uncommitted changes** — 4 modified files need committing before next build
-4. Check Apple Developer enrollment status — still pending?
-5. Check Google Play Console enrollment — is it complete?
-6. **Day 6B sequence:**
-   a. Finish Google Play Console enrollment
-   b. Create subscription products in Google Play Console (monthly €9.99, annual €69.99)
-   c. Create app in RevenueCat dashboard → connect Google Play
-   d. Create offering in RevenueCat with both packages
-   e. Copy RevenueCat Android API key → add to `.env` as `EXPO_PUBLIC_RC_GOOGLE_KEY`
-   f. Commit all changes → build new APK → install → test paywall
-   g. Test sandbox purchase with Google Play test account
-   h. Wire feature gating (block scans when trial expired and no subscription)
+3. **The one blocker:** Tapping "Start 7-Day Free Trial" gives "item not found" because no AAB is on Google Play Internal Testing track
+4. **Day 6D sequence:**
+   a. Build production AAB: `NODE_OPTIONS="--require ./_dns-fix.js" eas build --platform android --profile production --non-interactive`
+   b. Upload AAB to Google Play Console → Internal Testing → Create release → Publish
+   c. Add your Google account as tester on Internal Testing track (Testers tab → email list)
+   d. Verify license testing: Play Console → Settings → License testing → your email listed
+   e. Wait 10-30 min for Google Play to process
+   f. Install app → paywall → tap purchase → Google Play sandbox dialog should appear
+   g. Complete sandbox purchase → verify scan screen loads (isPremium = true)
+   h. Test restore purchases flow
+5. **If "item not found" persists:** Check package name match (`com.cleanplateai.app`), product ID match, subscriptions are Active (not Draft), clear Google Play Store cache on phone
+6. **After purchases work:** Move to Day 7 (sharing, UI polish, store assets)
 7. Deploy Firestore security rules via Firebase Console before any public release
-8. Check `learning/day6-eas-build-fixes.md` for all build/DNS gotchas
+8. Check `learning/day6c-revenuecat-offerings-sandbox.md` for today's diagnosis
+9. Check `learning/day6-eas-build-fixes.md` for all build/DNS gotchas
