@@ -1,6 +1,7 @@
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
+import { typography } from '../constants/typography';
 
 interface MenuTextDisplayProps {
   menuText: string;
@@ -51,12 +52,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.surface,
-    borderRadius: 16,
+    borderRadius: 12,
     overflow: 'hidden',
-    shadowColor: '#000',
+    shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
     elevation: 3,
   },
   header: {
@@ -68,8 +69,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.border,
   },
   headerText: {
-    fontSize: 16,
-    fontWeight: '600',
+    ...typography.subheading,
     color: Colors.text,
   },
   textContainer: {
@@ -77,8 +77,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   menuText: {
-    fontSize: 14,
-    lineHeight: 22,
+    ...typography.body,
     color: Colors.text,
   },
   footer: {
@@ -97,8 +96,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
   },
   analyzeText: {
-    fontSize: 16,
-    fontWeight: '700',
+    ...typography.button,
     color: '#FFFFFF',
   },
   disabled: {
@@ -115,8 +113,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.primary,
   },
   rescanText: {
-    fontSize: 15,
-    fontWeight: '600',
+    ...typography.button,
     color: Colors.primary,
   },
 });

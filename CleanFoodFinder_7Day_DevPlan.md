@@ -1,8 +1,8 @@
-# CleanFoodFinder - 7-Day Development Plan
+# Clean Plate - 7-Day Development Plan
 
 ## Project Overview
 
-**App Name:** CleanFoodFinder
+**App Name:** Clean Plate
 **Platform:** iOS + Android (React Native with Expo)
 **Goal:** AI-powered menu scanner that recommends healthiest dishes
 **Timeline:** 7 days to TestFlight

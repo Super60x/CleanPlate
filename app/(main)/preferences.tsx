@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   Alert,
   Linking,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -13,6 +14,7 @@ import { Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../contexts/AuthContext';
 import { Colors } from '../../constants/colors';
+import { typography } from '../../constants/typography';
 import { DietaryRestriction, HealthGoal, UserPreferences } from '../../types';
 import { loadPreferences, savePreferences } from '../../services/firestore';
 import LoadingOverlay from '../../components/LoadingOverlay';
@@ -228,6 +230,25 @@ export default function PreferencesScreen() {
 
           {/* Account Section */}
           <Text style={styles.sectionTitle}>Account</Text>
+
+          <Pressable
+            style={styles.manageRow}
+            onPress={() => {
+              const url =
+                Platform.OS === 'ios'
+                  ? 'https://apps.apple.com/account/subscriptions'
+                  : 'https://play.google.com/store/account/subscriptions';
+              Linking.openURL(url);
+            }}
+          >
+            <Ionicons name="card-outline" size={20} color={Colors.primary} />
+            <Text style={styles.manageText}>Manage subscription</Text>
+            <Ionicons name="open-outline" size={16} color={Colors.textLight} style={{ marginLeft: 'auto' }} />
+          </Pressable>
+          <Text style={styles.manageDescription}>
+            View, change, or cancel your subscription in {Platform.OS === 'ios' ? 'the App Store' : 'Google Play'}.
+          </Text>
+
           <Pressable style={styles.deleteRow} onPress={handleDeleteRequest}>
             <Ionicons name="trash-outline" size={20} color={Colors.error} />
             <Text style={styles.deleteText}>Request account deletion</Text>
@@ -251,14 +272,13 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
+    ...typography.sectionHeading,
     color: Colors.text,
     marginTop: 24,
     marginBottom: 4,
   },
   sectionDescription: {
-    fontSize: 13,
+    ...typography.caption,
     color: Colors.textSecondary,
     marginBottom: 12,
   },
@@ -333,10 +353,9 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   infoText: {
+    ...typography.caption,
     flex: 1,
-    fontSize: 13,
     color: Colors.text,
-    lineHeight: 18,
   },
   saveContainer: {
     marginTop: 32,
@@ -352,6 +371,25 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
     color: Colors.error,
+  },
+  manageRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 8,
+    paddingVertical: 12,
+  },
+  manageText: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: Colors.primary,
+  },
+  manageDescription: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+    marginTop: -4,
+    marginLeft: 28,
+    marginBottom: 12,
   },
   deleteDescription: {
     fontSize: 12,

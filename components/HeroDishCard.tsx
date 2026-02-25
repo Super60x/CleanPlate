@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
+import { typography } from '../constants/typography';
 import { DishAnalysis, getScoreColor, ScoreColor } from '../types';
 
 const scoreColorMap = {
@@ -132,7 +133,7 @@ export default function HeroDishCard({ dish, rank }: HeroDishCardProps) {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.heroBackground,
-    borderRadius: 16,
+    borderRadius: 12,
     borderLeftWidth: 4,
     borderLeftColor: Colors.scoreGreen,
     padding: 16,
@@ -149,8 +150,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   topPickText: {
-    fontSize: 11,
-    fontWeight: '700',
+    ...typography.badge,
     color: Colors.scoreGreen,
   },
   header: {
@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   scoreText: {
+    fontFamily: 'Poppins_700Bold',
     color: '#FFFFFF',
     fontSize: 20,
     fontWeight: '800',
@@ -184,8 +185,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   dishName: {
-    fontSize: 16,
-    fontWeight: '600',
+    ...typography.subheading,
     color: Colors.text,
   },
   calorieRow: {
@@ -251,16 +251,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primaryLight,
   },
   benefitText: {
-    fontSize: 12,
-    fontWeight: '600',
+    ...typography.badge,
     color: Colors.primaryDark,
   },
   warningTag: {
     backgroundColor: '#FEF3C7',
   },
   warningText: {
-    fontSize: 12,
-    fontWeight: '600',
+    ...typography.badge,
     color: '#92400E',
   },
   macroDetail: {

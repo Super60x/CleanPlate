@@ -13,6 +13,7 @@ import {
 import { Link } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { Colors } from '../../constants/colors';
+import { typography } from '../../constants/typography';
 import LoadingOverlay from '../../components/LoadingOverlay';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -172,12 +173,11 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   title: {
-    fontSize: 28,
-    fontWeight: '800',
+    ...typography.pageTitle,
     color: Colors.text,
   },
   subtitle: {
-    fontSize: 16,
+    ...typography.body,
     color: Colors.textSecondary,
     marginTop: 4,
   },
@@ -235,9 +235,8 @@ const styles = StyleSheet.create({
     elevation: 0,
   },
   buttonText: {
+    ...typography.button,
     color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '700',
   },
   footer: {
     flexDirection: 'row',
@@ -245,12 +244,11 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   footerText: {
+    ...typography.body,
     color: Colors.textSecondary,
-    fontSize: 14,
   },
   footerLink: {
+    ...typography.body,
     color: Colors.primary,
-    fontSize: 14,
-    fontWeight: '700',
   },
 });

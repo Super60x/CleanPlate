@@ -4,6 +4,7 @@ import { Stack, useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../../constants/colors';
+import { typography } from '../../constants/typography';
 import { useAuth } from '../../contexts/AuthContext';
 import { useSubscription } from '../../contexts/SubscriptionContext';
 import { extractTextFromImage, extractTextFromMultipleImages } from '../../services/vision';
@@ -443,14 +444,13 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   title: {
-    fontSize: 22,
-    fontWeight: '700',
+    ...typography.sectionHeading,
     color: Colors.text,
     marginTop: 16,
     textAlign: 'center',
   },
   subtitle: {
-    fontSize: 15,
+    ...typography.body,
     color: Colors.textSecondary,
     textAlign: 'center',
     marginBottom: 24,
@@ -459,7 +459,7 @@ const styles = StyleSheet.create({
   modeToggle: {
     flexDirection: 'row',
     backgroundColor: Colors.surface,
-    borderRadius: 10,
+    borderRadius: 12,
     borderWidth: 1.5,
     borderColor: Colors.border,
     overflow: 'hidden',
@@ -478,8 +478,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
   },
   modeText: {
-    fontSize: 14,
-    fontWeight: '600',
+    ...typography.badge,
     color: Colors.primary,
   },
   modeTextActive: {
@@ -542,9 +541,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   thumbnailBadgeText: {
+    ...typography.badge,
     color: '#FFFFFF',
-    fontSize: 11,
-    fontWeight: '700',
   },
   addMoreRow: {
     flexDirection: 'row',
@@ -563,8 +561,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface,
   },
   addMoreText: {
-    fontSize: 14,
-    fontWeight: '600',
+    ...typography.badge,
     color: Colors.primary,
   },
   // Naming modal
@@ -577,19 +574,18 @@ const styles = StyleSheet.create({
   },
   nameModalContainer: {
     backgroundColor: Colors.surface,
-    borderRadius: 16,
+    borderRadius: 12,
     padding: 24,
     width: '100%',
     maxWidth: 340,
   },
   nameModalTitle: {
-    fontSize: 18,
-    fontWeight: '700',
+    ...typography.sectionHeading,
     color: Colors.text,
     textAlign: 'center',
   },
   nameModalSubtitle: {
-    fontSize: 13,
+    ...typography.caption,
     color: Colors.textSecondary,
     textAlign: 'center',
     marginTop: 4,
@@ -619,8 +615,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   nameModalSkipText: {
-    fontSize: 15,
-    fontWeight: '600',
+    ...typography.button,
     color: Colors.textSecondary,
   },
   nameModalSave: {
@@ -631,8 +626,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   nameModalSaveText: {
-    fontSize: 15,
-    fontWeight: '600',
+    ...typography.button,
     color: '#FFFFFF',
   },
 });

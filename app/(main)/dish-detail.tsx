@@ -2,6 +2,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../../constants/colors';
+import { typography } from '../../constants/typography';
 import { DishAnalysis, getScoreColor, ScoreColor } from '../../types';
 
 const scoreColorMap = {
@@ -55,7 +56,7 @@ export default function DishDetailScreen() {
       <Stack.Screen
         options={{
           title: isTopPick ? 'Top Clean Pick' : 'Dish Details',
-          headerTitleStyle: { fontWeight: '700', fontSize: 18 },
+          headerTitleStyle: { ...typography.pageTitle },
         }}
       />
 
@@ -222,8 +223,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   bestChoiceText: {
-    fontSize: 12,
-    fontWeight: '800',
+    ...typography.badge,
     color: '#FFFFFF',
     letterSpacing: 1,
   },
@@ -239,8 +239,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   dishName: {
-    fontSize: 24,
-    fontWeight: '800',
+    ...typography.sectionHeading,
     color: Colors.text,
     textAlign: 'center',
     marginBottom: 24,
@@ -249,14 +248,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.surface,
-    borderRadius: 16,
+    borderRadius: 12,
     padding: 20,
     gap: 16,
-    shadowColor: '#000',
+    shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
+    shadowOpacity: 0.08,
     shadowRadius: 8,
-    elevation: 2,
+    elevation: 3,
     marginBottom: 16,
   },
   scoreLargeCircle: {
@@ -268,6 +267,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scoreLargeNumber: {
+    fontFamily: 'Poppins_700Bold',
     fontSize: 26,
     fontWeight: '800',
   },
@@ -275,8 +275,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scoreTitle: {
-    fontSize: 18,
-    fontWeight: '700',
+    ...typography.subheading,
     marginBottom: 4,
   },
   scorePercentile: {
@@ -297,8 +296,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
   },
   benefitTagText: {
-    fontSize: 11,
-    fontWeight: '700',
+    ...typography.badge,
     color: Colors.primaryDark,
     letterSpacing: 0.5,
   },
@@ -309,8 +307,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
   },
   warningTagText: {
-    fontSize: 11,
-    fontWeight: '700',
+    ...typography.badge,
     color: '#92400E',
     letterSpacing: 0.5,
   },
@@ -328,14 +325,14 @@ const styles = StyleSheet.create({
   },
   reasoningCard: {
     backgroundColor: Colors.surface,
-    borderRadius: 16,
+    borderRadius: 12,
     padding: 18,
     marginBottom: 16,
-    shadowColor: '#000',
+    shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
+    shadowOpacity: 0.08,
     shadowRadius: 8,
-    elevation: 2,
+    elevation: 3,
   },
   reasoningHeader: {
     flexDirection: 'row',
@@ -344,29 +341,26 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   reasoningTitle: {
-    fontSize: 16,
-    fontWeight: '700',
+    ...typography.sectionHeading,
     color: Colors.text,
   },
   reasoningText: {
-    fontSize: 14,
+    ...typography.body,
     color: Colors.textSecondary,
-    lineHeight: 22,
   },
   detailCard: {
     backgroundColor: Colors.surface,
-    borderRadius: 16,
+    borderRadius: 12,
     padding: 18,
     marginBottom: 12,
-    shadowColor: '#000',
+    shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
+    shadowOpacity: 0.08,
     shadowRadius: 8,
-    elevation: 2,
+    elevation: 3,
   },
   detailCardTitle: {
-    fontSize: 15,
-    fontWeight: '700',
+    ...typography.sectionHeading,
     color: Colors.text,
     marginBottom: 12,
   },
@@ -377,35 +371,34 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   detailRowText: {
+    ...typography.body,
     flex: 1,
-    fontSize: 14,
     color: Colors.textSecondary,
-    lineHeight: 20,
   },
   statsBar: {
     flexDirection: 'row',
     backgroundColor: Colors.surface,
-    borderRadius: 16,
+    borderRadius: 12,
     padding: 16,
     marginTop: 8,
-    shadowColor: '#000',
+    shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
+    shadowOpacity: 0.08,
     shadowRadius: 8,
-    elevation: 2,
+    elevation: 3,
   },
   statItem: {
     flex: 1,
     alignItems: 'center',
   },
   statValue: {
+    fontFamily: 'Poppins_700Bold',
     fontSize: 18,
     fontWeight: '800',
     color: Colors.text,
   },
   statLabel: {
-    fontSize: 10,
-    fontWeight: '600',
+    ...typography.caption,
     color: Colors.textLight,
     marginTop: 4,
     letterSpacing: 0.5,

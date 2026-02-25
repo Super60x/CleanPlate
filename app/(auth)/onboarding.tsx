@@ -2,6 +2,7 @@ import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../../constants/colors';
+import { typography } from '../../constants/typography';
 
 const HERO_IMAGE_URL =
   'https://res.cloudinary.com/deqjaohp9/image/upload/v1770553779/screen_jam3xi.png';
@@ -94,29 +95,25 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   brandName: {
-    fontSize: 32,
-    fontWeight: '800',
+    ...typography.pageTitle,
     color: Colors.text,
   },
   tagline: {
-    fontSize: 14,
-    fontWeight: '700',
+    ...typography.badge,
     color: Colors.primary,
     letterSpacing: 3,
     marginBottom: 20,
   },
   subtitle: {
-    fontSize: 20,
-    fontWeight: '700',
+    ...typography.sectionHeading,
     color: Colors.text,
     textAlign: 'center',
     marginBottom: 12,
   },
   description: {
-    fontSize: 15,
+    ...typography.body,
     color: Colors.textSecondary,
     textAlign: 'center',
-    lineHeight: 22,
     marginBottom: 32,
   },
   getStartedButton: {
@@ -135,9 +132,8 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   getStartedText: {
+    ...typography.button,
     color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '700',
   },
   signInRow: {
     flexDirection: 'row',

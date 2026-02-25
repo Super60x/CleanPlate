@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
+import { typography } from '../constants/typography';
 import { DishAnalysis, getScoreColor, ScoreColor } from '../types';
 
 const scoreColorMap = {
@@ -130,13 +131,13 @@ const progressStyles = StyleSheet.create({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.surface,
-    borderRadius: 16,
+    borderRadius: 12,
     padding: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
+    shadowOpacity: 0.08,
     shadowRadius: 8,
-    elevation: 2,
+    elevation: 3,
   },
   mostCleanBadge: {
     flexDirection: 'row',
@@ -150,8 +151,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   mostCleanText: {
-    fontSize: 11,
-    fontWeight: '800',
+    ...typography.badge,
     color: Colors.primary,
     letterSpacing: 0.5,
   },
@@ -172,10 +172,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   dishName: {
-    fontSize: 16,
-    fontWeight: '700',
+    ...typography.subheading,
     color: Colors.text,
-    lineHeight: 21,
   },
   scoreContainer: {
     alignItems: 'center',
@@ -189,12 +187,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scoreNumber: {
+    fontFamily: 'Poppins_700Bold',
     fontSize: 18,
     fontWeight: '800',
   },
   scoreLabel: {
-    fontSize: 9,
-    fontWeight: '700',
+    ...typography.caption,
     color: Colors.textLight,
     marginTop: 2,
     letterSpacing: 0.5,

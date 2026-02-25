@@ -1,6 +1,7 @@
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
+import { typography } from '../constants/typography';
 
 interface ScanButtonProps {
   onPress: () => void;
@@ -62,8 +63,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   label: {
-    fontSize: 17,
-    fontWeight: '600',
+    ...typography.button,
   },
   primaryLabel: {
     color: '#FFFFFF',

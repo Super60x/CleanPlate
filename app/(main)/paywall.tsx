@@ -4,6 +4,7 @@ import { Stack, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { PurchasesPackage } from 'react-native-purchases';
 import { Colors } from '../../constants/colors';
+import { typography } from '../../constants/typography';
 import { getOfferings, purchasePackage, restorePurchases } from '../../services/purchases';
 import { useSubscription } from '../../contexts/SubscriptionContext';
 
@@ -223,17 +224,15 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   title: {
-    fontSize: 26,
-    fontWeight: '800',
+    ...typography.pageTitle,
     color: Colors.text,
     textAlign: 'center',
   },
   subtitle: {
-    fontSize: 15,
+    ...typography.body,
     color: Colors.textSecondary,
     textAlign: 'center',
     marginTop: 8,
-    lineHeight: 22,
   },
   benefits: {
     gap: 14,
@@ -245,9 +244,8 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   benefitText: {
-    fontSize: 16,
+    ...typography.body,
     color: Colors.text,
-    fontWeight: '500',
   },
   noPlans: {
     padding: 24,
@@ -266,12 +264,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 18,
-    borderRadius: 14,
+    borderRadius: 12,
     borderWidth: 2,
     borderColor: Colors.border,
     backgroundColor: Colors.surface,
     position: 'relative',
     overflow: 'hidden',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
   },
   planCardSelected: {
     borderColor: Colors.primary,
@@ -287,9 +290,8 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 10,
   },
   savingsBadgeText: {
+    ...typography.badge,
     color: '#FFFFFF',
-    fontSize: 11,
-    fontWeight: '700',
   },
   planRadio: {
     marginRight: 14,
@@ -316,15 +318,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   planTitle: {
-    fontSize: 17,
-    fontWeight: '700',
+    ...typography.subheading,
     color: Colors.text,
   },
   planTitleSelected: {
     color: Colors.primaryDark,
   },
   planPrice: {
-    fontSize: 14,
+    ...typography.body,
     color: Colors.textSecondary,
     marginTop: 2,
   },
@@ -343,12 +344,11 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   ctaText: {
+    ...typography.button,
     color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '800',
   },
   ctaSubtext: {
-    fontSize: 13,
+    ...typography.caption,
     color: Colors.textSecondary,
     textAlign: 'center',
     marginTop: 10,

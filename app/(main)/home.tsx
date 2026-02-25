@@ -2,6 +2,7 @@ import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { Colors } from '../../constants/colors';
+import { typography } from '../../constants/typography';
 import LoadingOverlay from '../../components/LoadingOverlay';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -115,13 +116,11 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   welcomeTitle: {
-    fontSize: 28,
-    fontWeight: '800',
+    ...typography.pageTitle,
     color: Colors.text,
   },
   welcomeTagline: {
-    fontSize: 12,
-    fontWeight: '700',
+    ...typography.badge,
     color: Colors.primary,
     letterSpacing: 3,
     marginTop: 4,
@@ -133,28 +132,26 @@ const styles = StyleSheet.create({
   },
   scanButton: {
     backgroundColor: Colors.primary,
-    borderRadius: 20,
+    borderRadius: 12,
     padding: 32,
     alignItems: 'center',
     width: '100%',
     shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 6,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
   },
   scanButtonTitle: {
-    fontSize: 20,
-    fontWeight: '800',
+    ...typography.sectionHeading,
     color: '#FFFFFF',
     marginTop: 12,
   },
   scanButtonDescription: {
-    fontSize: 14,
+    ...typography.body,
     color: 'rgba(255, 255, 255, 0.85)',
     textAlign: 'center',
     marginTop: 6,
-    lineHeight: 20,
   },
   logoutButton: {
     padding: 8,
@@ -166,18 +163,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.surface,
-    borderRadius: 16,
+    borderRadius: 12,
     padding: 18,
     width: '100%',
     marginTop: 16,
     borderWidth: 1.5,
     borderColor: Colors.border,
     gap: 12,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
   },
   historyButtonText: {
+    ...typography.subheading,
     flex: 1,
-    fontSize: 16,
-    fontWeight: '700',
     color: Colors.text,
   },
 });

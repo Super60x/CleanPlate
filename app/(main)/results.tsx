@@ -4,6 +4,7 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 import { Colors } from '../../constants/colors';
+import { typography } from '../../constants/typography';
 import { DishAnalysis } from '../../types';
 import AnalysisDishCard from '../../components/AnalysisDishCard';
 
@@ -73,7 +74,7 @@ export default function ResultsScreen() {
       <Stack.Screen
         options={{
           title: 'Menu Analysis',
-          headerTitleStyle: { fontWeight: '700', fontSize: 18 },
+          headerTitleStyle: { ...typography.pageTitle },
         }}
       />
 
@@ -182,8 +183,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   savedText: {
-    fontSize: 13,
-    fontWeight: '600',
+    ...typography.badge,
     color: Colors.primaryDark,
   },
   filterRow: {
@@ -204,8 +204,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.accent,
   },
   filterText: {
-    fontSize: 13,
-    fontWeight: '600',
+    ...typography.badge,
     color: Colors.textSecondary,
   },
   filterTextActive: {
@@ -252,9 +251,8 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   scanAnotherText: {
+    ...typography.button,
     color: '#FFFFFF',
-    fontSize: 17,
-    fontWeight: '700',
   },
   imageModalOverlay: {
     flex: 1,

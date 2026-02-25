@@ -13,6 +13,7 @@ import { Stack, useFocusEffect, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../contexts/AuthContext';
 import { Colors } from '../../constants/colors';
+import { typography } from '../../constants/typography';
 import { ScanResult } from '../../types';
 import { deleteScanResult, loadScanHistory, updateScanName } from '../../services/firestore';
 import LoadingOverlay from '../../components/LoadingOverlay';
@@ -210,11 +211,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface,
     borderRadius: 12,
     padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowRadius: 8,
+    elevation: 3,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -222,13 +223,12 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   cardTitle: {
+    ...typography.subheading,
     flex: 1,
-    fontSize: 16,
-    fontWeight: '600',
     color: Colors.text,
   },
   cardDate: {
-    fontSize: 13,
+    ...typography.caption,
     color: Colors.textSecondary,
     marginTop: 6,
     marginLeft: 30,
@@ -261,17 +261,15 @@ const styles = StyleSheet.create({
     padding: 40,
   },
   emptyTitle: {
-    fontSize: 18,
-    fontWeight: '700',
+    ...typography.sectionHeading,
     color: Colors.text,
     marginTop: 16,
   },
   emptySubtitle: {
-    fontSize: 14,
+    ...typography.body,
     color: Colors.textSecondary,
     textAlign: 'center',
     marginTop: 8,
-    lineHeight: 20,
   },
   renameOverlay: {
     flex: 1,
@@ -288,8 +286,7 @@ const styles = StyleSheet.create({
     maxWidth: 340,
   },
   renameTitle: {
-    fontSize: 18,
-    fontWeight: '700',
+    ...typography.sectionHeading,
     color: Colors.text,
     textAlign: 'center',
     marginBottom: 16,
@@ -318,8 +315,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   renameCancelText: {
-    fontSize: 15,
-    fontWeight: '600',
+    ...typography.button,
     color: Colors.textSecondary,
   },
   renameSaveBtn: {
@@ -330,8 +326,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   renameSaveText: {
-    fontSize: 15,
-    fontWeight: '600',
+    ...typography.button,
     color: '#FFFFFF',
   },
 });
