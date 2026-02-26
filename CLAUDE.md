@@ -163,11 +163,26 @@ AI-powered restaurant menu scanner app. User photographs a menu → OCR extracts
 - Test sandbox purchase flow (currently gives "item not found" error)
 - Verify subscription status updates after purchase
 - Test restore purchases flow
-- iOS build (BLOCKED — Apple Developer enrollment pending)
+- iOS build (Apple Developer enrollment now APPROVED — ready to proceed)
 
 **BLOCKERS:**
-- Apple Developer enrollment PENDING — blocker for iOS builds and App Store Connect
+- ~~Apple Developer enrollment PENDING~~ — **APPROVED** ✓ (unblocked Feb 2026)
 - Firestore security rules created but NOT YET DEPLOYED — deploy via Firebase Console before launch
+
+**iOS NEXT STEPS (now unblocked):**
+1. Add Apple credentials to EAS: `eas credentials --platform ios`
+   - EAS will auto-generate provisioning profile + signing certificate (choose "managed")
+2. Create app in App Store Connect: https://appstoreconnect.apple.com
+   - New App → iOS → Bundle ID: `com.cleanplateai.app` → name: "Clean Plate"
+3. Add RevenueCat Apple API key to `.env`: `EXPO_PUBLIC_RC_APPLE_KEY=appl_xxx`
+   - Get from RevenueCat dashboard → Clean Plate app → API Keys
+4. Configure RevenueCat iOS products:
+   - App Store Connect → Subscriptions → create `cleanplate_premium_monthly` + `cleanplate_premium_annual`
+   - RevenueCat dashboard → link iOS products to `premium` entitlement in `default` offering
+5. Build iOS: `NODE_OPTIONS="--require ./_dns-fix.js" eas build --platform ios --profile production --non-interactive`
+6. Submit to TestFlight: `eas submit --platform ios`
+7. Add yourself as TestFlight internal tester → test sandbox purchase flow on iOS
+- See `learning/day7-dev-workflow-builds.md` for dev build workflow explanation
 
 **KEY BUILD COMMANDS:**
 ```bash
@@ -216,7 +231,7 @@ CleanFoodFinder/
 ### Full 7-day plan reference
 See `CleanFoodFinder_7Day_DevPlan.md` in project root (located at `c:\dev\mobile_cleaneatingmeals\CleanFoodFinder_7Day_DevPlan.md`).
 
-### How to resume next session (Day 6D — Sandbox Purchase Testing)
+### How to resume next session (Day 7 — UI Polish + iOS Setup)
 1. Read this CLAUDE.md for full context
 2. **Phone DNS:** Ensure Android Private DNS is set to `dns.google` before testing
 3. **The one blocker:** Tapping "Start 7-Day Free Trial" gives "item not found" because no AAB is on Google Play Internal Testing track
