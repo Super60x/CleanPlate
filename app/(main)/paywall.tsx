@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { PurchasesPackage } from 'react-native-purchases';
@@ -192,7 +192,7 @@ export default function PaywallScreen() {
         <View style={styles.legal}>
           <Text style={styles.legalText}>
             By subscribing, you agree to our Terms of Service and Privacy Policy.
-            Payment will be charged to your Google Play account. Subscription auto-renews
+            Payment will be charged to your {Platform.OS === 'ios' ? 'Apple ID' : 'Google Play'} account. Subscription auto-renews
             unless cancelled at least 24 hours before the end of the current period.
           </Text>
         </View>
