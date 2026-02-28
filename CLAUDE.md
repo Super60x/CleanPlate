@@ -84,7 +84,7 @@ Stay pragmatic. Stay reliable. Keep learning.
 ### Project Overview
 AI-powered restaurant menu scanner app. User photographs a menu → OCR extracts text → Claude AI analyzes dishes → health scores + nutritional breakdown for each dish.
 
-### Current Progress: Day 6 mostly complete — Day 6D (sandbox purchase testing) is NEXT
+### Current Progress: Day 6D partially done — iOS store setup done, testing NEXT
 - **Day 1 (DONE):** Expo project + Firebase Auth (login/signup/logout)
 - **Day 2 (DONE):** Camera (expo-image-picker) + Google Cloud Vision OCR
 - **Day 3 (DONE):** Claude API health analysis + results UI + .env security fix
@@ -95,8 +95,8 @@ AI-powered restaurant menu scanner app. User photographs a menu → OCR extracts
 - **Day 6A (DONE):** EAS Build working, firebase.ts fixed for native builds, phone DNS fixed, RevenueCat code integrated, paywall UI built
 - **Day 6B (DONE):** Google Play Console enrollment, subscription products created, RevenueCat dashboard configured, service account connected
 - **Day 6C (DONE):** Fixed offerings not loading (products were under wrong RC app "Test Store" instead of "Clean Plate"), fixed offering packages not linked to products
-- **Day 6D (NEXT):** Upload AAB to Internal Testing track, test sandbox purchases, verify subscription flow end-to-end
-- **Day 7:** Sharing, polish, TestFlight/Play Store deployment
+- **Day 6D (IN PROGRESS):** iOS App Store Connect configured, iOS build uploaded, paywall iOS fix committed. Still need: fix app icon, TestFlight testing, Android Internal Testing sandbox purchases
+- **Day 7:** Sharing, polish, final store submissions
 
 ### Platform
 - **React Native + Expo SDK 54** (pivoted from SwiftUI — user has no Mac)
@@ -157,32 +157,35 @@ AI-powered restaurant menu scanner app. User photographs a menu → OCR extracts
 - Paywall now loads offerings and shows plan cards with real prices
 - Feature gating works (non-premium users redirected to paywall on scan)
 
-**NOT DONE (Day 6D — Sandbox Purchase Testing):**
-- Upload AAB to Google Play Console **Internal Testing** track (required for Google Play Billing to work)
-- Add Google account as tester on Internal Testing track
-- Test sandbox purchase flow (currently gives "item not found" error)
-- Verify subscription status updates after purchase
-- Test restore purchases flow
-- iOS build (Apple Developer enrollment now APPROVED — ready to proceed)
+**DONE (Day 6D — iOS App Store Setup):**
+- Apple Developer enrollment APPROVED
+- App Store Connect app created: "Clean Plate AI"
+- App Information configured: subtitle, categories (Food & Drink + Health & Fitness), age rating 4+, encryption exemption
+- App Privacy questionnaire completed
+- Pricing: Free (with in-app subscriptions)
+- iOS subscriptions created: `cleanplate_premium_monthly` + `cleanplate_premium_annual` in subscription group "Clean Plate Premium" (ID: 21951950)
+- Subscription levels: Annual = Level 1, Monthly = Level 2
+- RevenueCat Apple key set: `EXPO_PUBLIC_RC_APPLE_KEY=appl_tQKCkNKOcKAkjPDwHiQtsHmKRFr`
+- iOS build completed (1.0.0 build 2, git ref 3ce3c8c) and submitted to App Store Connect via `eas submit`
+- Build visible in App Store Connect under version 1.0
+- Paywall legal text fixed: shows "Apple ID" on iOS, "Google Play" on Android (Platform-aware)
+- Version 1.0 page partially filled: 3 screenshots, promotional text, description, keywords, review notes
+- Copyright: `2026 Pnt Studio`, Marketing URL: `https://www.pntstudio.app`
+
+**NOT DONE (Day 6D — Still Remaining):**
+- **iOS app icon:** Current build uses default Expo placeholder icon. Need to convert `assets/logo-icon.svg` to 1024x1024 PNG, replace `assets/icon.png`, rebuild + resubmit
+- **iOS subscription pricing:** Verify prices are set for both subscriptions (may still be "Missing Metadata")
+- **iOS free trial:** Configure 7-day introductory offer on each subscription
+- **iOS subscription review screenshots:** Verify both monthly and annual have review screenshots
+- **TestFlight testing:** Add yourself as internal tester, install, test full app flow on iPhone
+- **iOS review test account:** Create real test account (not placeholder hello@gmail.com/Password123)
+- **Apple Silicon Mac / Vision Pro:** Uncheck availability (camera-dependent app)
+- **Android Internal Testing:** Upload AAB to Internal Testing track, add tester email, test sandbox purchases
+- **Firestore security rules:** Still NOT deployed — deploy via Firebase Console before launch
 
 **BLOCKERS:**
-- ~~Apple Developer enrollment PENDING~~ — **APPROVED** ✓ (unblocked Feb 2026)
-- Firestore security rules created but NOT YET DEPLOYED — deploy via Firebase Console before launch
-
-**iOS NEXT STEPS (now unblocked):**
-1. Add Apple credentials to EAS: `eas credentials --platform ios`
-   - EAS will auto-generate provisioning profile + signing certificate (choose "managed")
-2. Create app in App Store Connect: https://appstoreconnect.apple.com
-   - New App → iOS → Bundle ID: `com.cleanplateai.app` → name: "Clean Plate"
-3. Add RevenueCat Apple API key to `.env`: `EXPO_PUBLIC_RC_APPLE_KEY=appl_xxx`
-   - Get from RevenueCat dashboard → Clean Plate app → API Keys
-4. Configure RevenueCat iOS products:
-   - App Store Connect → Subscriptions → create `cleanplate_premium_monthly` + `cleanplate_premium_annual`
-   - RevenueCat dashboard → link iOS products to `premium` entitlement in `default` offering
-5. Build iOS: `NODE_OPTIONS="--require ./_dns-fix.js" eas build --platform ios --profile production --non-interactive`
-6. Submit to TestFlight: `eas submit --platform ios`
-7. Add yourself as TestFlight internal tester → test sandbox purchase flow on iOS
-- See `learning/day7-dev-workflow-builds.md` for dev build workflow explanation
+- No iPhone available for TestFlight testing (need to confirm)
+- Firestore security rules created but NOT YET DEPLOYED
 
 **KEY BUILD COMMANDS:**
 ```bash
@@ -231,21 +234,50 @@ CleanFoodFinder/
 ### Full 7-day plan reference
 See `CleanFoodFinder_7Day_DevPlan.md` in project root (located at `c:\dev\mobile_cleaneatingmeals\CleanFoodFinder_7Day_DevPlan.md`).
 
-### How to resume next session (Day 7 — UI Polish + iOS Setup)
+### How to resume next session
+
 1. Read this CLAUDE.md for full context
-2. **Phone DNS:** Ensure Android Private DNS is set to `dns.google` before testing
-3. **The one blocker:** Tapping "Start 7-Day Free Trial" gives "item not found" because no AAB is on Google Play Internal Testing track
-4. **Day 6D sequence:**
-   a. Build production AAB: `NODE_OPTIONS="--require ./_dns-fix.js" eas build --platform android --profile production --non-interactive`
-   b. Upload AAB to Google Play Console → Internal Testing → Create release → Publish
-   c. Add your Google account as tester on Internal Testing track (Testers tab → email list)
-   d. Verify license testing: Play Console → Settings → License testing → your email listed
-   e. Wait 10-30 min for Google Play to process
-   f. Install app → paywall → tap purchase → Google Play sandbox dialog should appear
-   g. Complete sandbox purchase → verify scan screen loads (isPremium = true)
-   h. Test restore purchases flow
-5. **If "item not found" persists:** Check package name match (`com.cleanplateai.app`), product ID match, subscriptions are Active (not Draft), clear Google Play Store cache on phone
-6. **After purchases work:** Move to Day 7 (sharing, UI polish, store assets)
-7. Deploy Firestore security rules via Firebase Console before any public release
-8. Check `learning/day6c-revenuecat-offerings-sandbox.md` for today's diagnosis
-9. Check `learning/day6-eas-build-fixes.md` for all build/DNS gotchas
+2. Check memory files at `~/.claude/projects/c--Users-Gebruiker-Dev-CleanPlate/memory/` for detailed notes
+3. **Phone DNS:** Ensure Android Private DNS is set to `dns.google` before testing
+
+**Priority 1 — Fix iOS App Icon (blocks everything iOS):**
+   a. Convert `assets/logo-icon.svg` to 1024x1024 PNG (use online SVG-to-PNG converter)
+   b. Replace `assets/icon.png` with the new PNG
+   c. Also update `assets/adaptive-icon.png` for Android
+   d. Commit, rebuild iOS: `NODE_OPTIONS="--require ./_dns-fix.js" eas build --platform ios --profile production --non-interactive`
+   e. Resubmit: `NODE_OPTIONS="--require ./_dns-fix.js" eas submit --platform ios`
+
+**Priority 2 — Complete iOS Subscription Setup:**
+   a. Go to App Store Connect → Subscriptions → each product → set price + 7-day free trial
+   b. Upload review screenshots for both subscriptions (resize to 1290x2796 in Paint)
+   c. Create a real test account for Apple reviewers (replace placeholder credentials)
+   d. Uncheck Apple Silicon Mac and Vision Pro availability
+
+**Priority 3 — TestFlight Testing (requires iPhone):**
+   a. Go to TestFlight tab in App Store Connect
+   b. Add yourself as internal tester
+   c. Install TestFlight app on iPhone → install Clean Plate
+   d. Test: login, scanning, paywall, purchase flow, restore purchases
+
+**Priority 4 — Android Internal Testing (sandbox purchases):**
+   a. Go to Google Play Console → Testing → Internal Testing → Create new release
+   b. Upload/select existing AAB → add release notes → roll out
+   c. Testers tab → create email list → add your Google account
+   d. Play Console → Settings → License testing → add your email
+   e. Wait 10-30 min for processing
+   f. Open opt-in link on phone → install → test purchase flow
+   g. If "item not found" persists: check package name match, product IDs, subscription status Active (not Draft), clear Play Store cache
+
+**Priority 5 — Before any public release:**
+   - Deploy Firestore security rules via Firebase Console
+   - Fill in Google Play Store listing (short description, full description, screenshots, icon, feature graphic)
+
+**References:**
+- `learning/day6c-revenuecat-offerings-sandbox.md` for RevenueCat diagnosis
+- `learning/day6-eas-build-fixes.md` for build/DNS gotchas
+- `learning/day7-dev-workflow-builds.md` for dev build workflow
+
+**App Store screenshot dimensions (learned):**
+- iPhone 6.5": use **1284 × 2778**
+- iPhone 6.7": use **1290 × 2796**
+- Resize in regular Paint (not Paint 3D): Resize → Pixels → uncheck "Maintain aspect ratio"
