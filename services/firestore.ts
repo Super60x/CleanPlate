@@ -110,3 +110,17 @@ export async function deleteScanResult(
 ): Promise<void> {
   await deleteDoc(doc(db, 'users', userId, 'scans', scanId));
 }
+
+/**
+ * Delete all user data from Firestore (preferences + all scans).
+ * Must be called BEFORE deleting the Firebase Auth account.
+ */
+export async function deleteAllUserData(userId: string): Promise<void> {
+  const scansSnapshot = await getDocs(collection(db, 'users', userId, 'scans'));
+  const deletePromises = scansSnapshot.docs.map((scanDoc) =>
+    deleteDoc(scanDoc.ref)
+  );
+  await Promise.all(deletePromises);
+
+  await deleteDoc(doc(db, 'users', userId, 'preferences', 'main')).catch(() => {});
+}

@@ -97,6 +97,7 @@ AI-powered restaurant menu scanner app. User photographs a menu → OCR extracts
 - **Day 6C (DONE):** Fixed offerings not loading (products were under wrong RC app "Test Store" instead of "Clean Plate"), fixed offering packages not linked to products
 - **Day 6D (IN PROGRESS):** iOS App Store Connect configured, iOS build uploaded, paywall iOS fix committed. Still need: fix app icon, TestFlight testing, Android Internal Testing sandbox purchases
 - **Day 7:** Sharing, polish, final store submissions
+- **GTM (DONE):** Landing page built (`landing/` dir), go-to-market plan created with viral mechanics + N8N automation strategy
 
 ### Platform
 - **React Native + Expo SDK 54** (pivoted from SwiftUI — user has no Mac)
@@ -228,7 +229,11 @@ CleanFoodFinder/
 ├── firestore.rules         # Firestore security rules (deploy via Firebase Console)
 ├── eas.json                # EAS Build profiles (development, preview, production)
 ├── .env                    # API keys (gitignored)
-└── learning/               # Lessons learned + regression tests per day
+├── learning/               # Lessons learned + regression tests per day
+└── landing/                # Astro + Tailwind landing page (cleanplateai.com)
+    ├── src/pages/index.astro   # Full landing page (single file)
+    ├── src/styles/global.css   # Brand colors via @theme, Poppins font
+    └── public/images/          # Logo SVG, screenshots, store badges
 ```
 
 ### Full 7-day plan reference
@@ -237,40 +242,47 @@ See `CleanFoodFinder_7Day_DevPlan.md` in project root (located at `c:\dev\mobile
 ### How to resume next session
 
 1. Read this CLAUDE.md for full context
-2. Check memory files at `~/.claude/projects/c--Users-Gebruiker-Dev-CleanPlate/memory/` for detailed notes
-3. **Phone DNS:** Ensure Android Private DNS is set to `dns.google` before testing
+2. Check memory files at `~/.claude/projects/c--Dev-Clean-Plate/memory/` for detailed notes
+3. Read GTM plan at `~/.claude/plans/vectorized-coalescing-meerkat.md` for full checklist
+4. **Phone DNS:** Ensure Android Private DNS is set to `dns.google` before testing
 
-**Priority 1 — Fix iOS App Icon (blocks everything iOS):**
-   a. Convert `assets/logo-icon.svg` to 1024x1024 PNG (use online SVG-to-PNG converter)
-   b. Replace `assets/icon.png` with the new PNG
-   c. Also update `assets/adaptive-icon.png` for Android
-   d. Commit, rebuild iOS: `NODE_OPTIONS="--require ./_dns-fix.js" eas build --platform ios --profile production --non-interactive`
-   e. Resubmit: `NODE_OPTIONS="--require ./_dns-fix.js" eas submit --platform ios`
+**Priority 1 — Finish Landing Page Deploy:**
+   a. Register `cleanplateai.com` domain
+   b. Create OG image (1200x630 — phone mockup on green gradient)
+   c. Replace waitlist localStorage with Buttondown API
+   d. Deploy to Cloudflare Pages, connect domain
+   e. Add Cloudflare Web Analytics
+   f. Build Privacy Policy + Terms of Service pages (`/privacy`, `/terms`)
+   g. Update store badge links when App Store / Play Store approve (edit `appStoreUrl` / `playStoreUrl` in `landing/src/pages/index.astro` frontmatter)
 
-**Priority 2 — Complete iOS Subscription Setup:**
-   a. Go to App Store Connect → Subscriptions → each product → set price + 7-day free trial
-   b. Upload review screenshots for both subscriptions (resize to 1290x2796 in Paint)
-   c. Create a real test account for Apple reviewers (replace placeholder credentials)
-   d. Uncheck Apple Silicon Mac and Vision Pro availability
+**Priority 2 — Viral Sharing Mechanics (in-app):**
+   a. Install `expo-sharing` + `react-native-view-shot` + `react-native-qrcode-svg`
+   b. Build `ShareCard` component (branded image with logo + QR code)
+   c. Add "Share This Dish" to `dish-detail.tsx`
+   d. Add "Share Menu Verdict" to `results.tsx`
+   e. Rebuild + resubmit to stores
 
-**Priority 3 — TestFlight Testing (requires iPhone):**
-   a. Go to TestFlight tab in App Store Connect
-   b. Add yourself as internal tester
-   c. Install TestFlight app on iPhone → install Clean Plate
-   d. Test: login, scanning, paywall, purchase flow, restore purchases
+**Priority 3 — N8N Automation:**
+   a. Set up N8N instance (self-hosted VPS or cloud)
+   b. Flow 1: Cross-post (TikTok → Instagram Reels + YouTube Shorts)
+   c. Flow 2: Content calendar + daily reminders
+   d. Flow 3: Waitlist → welcome email → launch blast
+   e. Flow 4: App Store review monitor + AI draft responses
+   f. Flow 5: Weekly SEO blog autopilot (Claude API → Astro blog)
 
-**Priority 4 — Android Internal Testing (sandbox purchases):**
-   a. Go to Google Play Console → Testing → Internal Testing → Create new release
-   b. Upload/select existing AAB → add release notes → roll out
-   c. Testers tab → create email list → add your Google account
-   d. Play Console → Settings → License testing → add your email
-   e. Wait 10-30 min for processing
-   f. Open opt-in link on phone → install → test purchase flow
-   g. If "item not found" persists: check package name match, product IDs, subscription status Active (not Draft), clear Play Store cache
+**Priority 4 — Social Media:**
+   a. Create TikTok + Instagram `@cleanplateai` accounts
+   b. Set up Linktree with landing page link
+   c. Film first 3 "build in public" videos
+   d. Post daily on TikTok, cross-post to Reels
 
-**Priority 5 — Before any public release:**
-   - Deploy Firestore security rules via Firebase Console
-   - Fill in Google Play Store listing (short description, full description, screenshots, icon, feature graphic)
+**Priority 5 (Existing — App Store):**
+   - Fix iOS app icon (convert SVG → 1024x1024 PNG, rebuild, resubmit)
+   - iOS subscription pricing + 7-day free trial setup
+   - TestFlight testing (requires iPhone)
+   - Android Internal Testing sandbox purchases
+   - Deploy Firestore security rules
+   - Google Play Store listing
 
 **References:**
 - `learning/day6c-revenuecat-offerings-sandbox.md` for RevenueCat diagnosis

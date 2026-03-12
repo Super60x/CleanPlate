@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Linking,
+  Modal,
   Platform,
   Pressable,
   ScrollView,
@@ -38,13 +40,16 @@ const GOAL_OPTIONS: { value: HealthGoal; label: string }[] = [
 ];
 
 export default function PreferencesScreen() {
-  const { user } = useAuth();
+  const { user, deleteAccount } = useAuth();
   const [restrictions, setRestrictions] = useState<DietaryRestriction[]>([]);
   const [goals, setGoals] = useState<HealthGoal[]>([]);
   const [avoidIngredients, setAvoidIngredients] = useState<string[]>([]);
   const [ingredientInput, setIngredientInput] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletePassword, setDeletePassword] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -87,11 +92,37 @@ export default function PreferencesScreen() {
   };
 
   const handleDeleteRequest = () => {
-    const subject = encodeURIComponent('Account Deletion Request');
-    const body = encodeURIComponent(
-      `Hi,\n\nI would like to request the deletion of my account and all associated data.\n\nAccount email: ${user?.email ?? 'N/A'}\nUser ID: ${user?.id ?? 'N/A'}\n\nThank you.`
+    Alert.alert(
+      'Delete Account',
+      'This will permanently delete your account, all scan history, and preferences. This cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            setDeletePassword('');
+            setShowDeleteModal(true);
+          },
+        },
+      ]
     );
-    Linking.openURL(`mailto:support@cleanplate.app?subject=${subject}&body=${body}`);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deletePassword) {
+      Alert.alert('Password Required', 'Please enter your password to confirm deletion.');
+      return;
+    }
+    setIsDeleting(true);
+    try {
+      await deleteAccount(deletePassword);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to delete account.';
+      Alert.alert('Deletion Failed', message);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const handleSave = async () => {
@@ -251,13 +282,53 @@ export default function PreferencesScreen() {
 
           <Pressable style={styles.deleteRow} onPress={handleDeleteRequest}>
             <Ionicons name="trash-outline" size={20} color={Colors.error} />
-            <Text style={styles.deleteText}>Request account deletion</Text>
+            <Text style={styles.deleteText}>Delete account</Text>
           </Pressable>
           <Text style={styles.deleteDescription}>
-            Opens an email to request deletion of your account and all associated data.
+            Permanently deletes your account, scan history, and all associated data.
           </Text>
         </ScrollView>
       )}
+
+      <Modal visible={showDeleteModal} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Confirm Deletion</Text>
+            <Text style={styles.modalMessage}>
+              Enter your password to permanently delete your account.
+            </Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Password"
+              placeholderTextColor={Colors.textLight}
+              secureTextEntry
+              value={deletePassword}
+              onChangeText={setDeletePassword}
+              autoFocus
+            />
+            <View style={styles.modalButtons}>
+              <Pressable
+                style={styles.modalCancelButton}
+                onPress={() => setShowDeleteModal(false)}
+                disabled={isDeleting}
+              >
+                <Text style={styles.modalCancelText}>Cancel</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.modalDeleteButton, isDeleting && { opacity: 0.6 }]}
+                onPress={handleConfirmDelete}
+                disabled={isDeleting}
+              >
+                {isDeleting ? (
+                  <ActivityIndicator color="#FFFFFF" size="small" />
+                ) : (
+                  <Text style={styles.modalDeleteText}>Delete Account</Text>
+                )}
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -396,5 +467,68 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     marginTop: -4,
     marginLeft: 28,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  modalContent: {
+    backgroundColor: Colors.background,
+    borderRadius: 16,
+    padding: 24,
+    width: '100%',
+    maxWidth: 400,
+  },
+  modalTitle: {
+    ...typography.sectionHeading,
+    color: Colors.text,
+    marginBottom: 8,
+  },
+  modalMessage: {
+    ...typography.body,
+    color: Colors.textSecondary,
+    marginBottom: 16,
+  },
+  modalInput: {
+    height: 48,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: Colors.border,
+    backgroundColor: Colors.surface,
+    paddingHorizontal: 16,
+    fontSize: 15,
+    color: Colors.text,
+    marginBottom: 16,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  modalCancelButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    backgroundColor: Colors.border,
+  },
+  modalCancelText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: Colors.text,
+  },
+  modalDeleteButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    backgroundColor: Colors.error,
+  },
+  modalDeleteText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#FFFFFF',
   },
 });

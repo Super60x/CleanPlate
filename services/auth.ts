@@ -3,6 +3,9 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  deleteUser,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
   User as FirebaseUser,
 } from 'firebase/auth';
 import { auth } from './firebase';
@@ -17,6 +20,7 @@ const AUTH_ERROR_MESSAGES: Record<string, string> = {
   'auth/weak-password': 'Password must be at least 6 characters long.',
   'auth/network-request-failed': 'Network error. Please check your connection.',
   'auth/too-many-requests': 'Too many attempts. Please try again later.',
+  'auth/requires-recent-login': 'Please re-enter your password to continue.',
   'auth/invalid-credential': 'Invalid email or password. Please try again.',
 };
 
@@ -83,4 +87,35 @@ export async function logout() {
 
 export function onAuthStateChange(callback: (user: FirebaseUser | null) => void) {
   return onAuthStateChanged(auth, callback);
+}
+
+export async function reauthenticate(password: string): Promise<void> {
+  const user = auth.currentUser;
+  if (!user || !user.email) {
+    throw new Error('No user is currently signed in.');
+  }
+  try {
+    const credential = EmailAuthProvider.credential(user.email, password);
+    await reauthenticateWithCredential(user, credential);
+  } catch (error) {
+    if (error && typeof error === 'object' && 'code' in error) {
+      const code = (error as { code: string }).code;
+      if (code === 'auth/wrong-password' || code === 'auth/invalid-credential') {
+        throw new Error('Incorrect password. Please try again.');
+      }
+    }
+    throw new Error(getAuthErrorMessage(error));
+  }
+}
+
+export async function deleteFirebaseAccount(): Promise<void> {
+  const user = auth.currentUser;
+  if (!user) {
+    throw new Error('No user is currently signed in.');
+  }
+  try {
+    await deleteUser(user);
+  } catch (error) {
+    throw new Error(getAuthErrorMessage(error));
+  }
 }

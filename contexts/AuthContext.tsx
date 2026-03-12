@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { User as FirebaseUser } from 'firebase/auth';
-import { onAuthStateChange, login, signUp, logout } from '../services/auth';
+import { onAuthStateChange, login, signUp, logout, reauthenticate, deleteFirebaseAccount } from '../services/auth';
+import { deleteAllUserData } from '../services/firestore';
 import type { AppUser } from '../types';
 
 interface AuthState {
@@ -13,6 +14,7 @@ interface AuthContextValue extends AuthState {
   login: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, confirmPassword: string) => Promise<void>;
   logout: () => Promise<void>;
+  deleteAccount: (password: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -79,6 +81,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const handleDeleteAccount = async (password: string) => {
+    if (!state.user) throw new Error('No user signed in.');
+    setState((prev) => ({ ...prev, isLoading: true }));
+    try {
+      await reauthenticate(password);
+      await deleteAllUserData(state.user.id);
+      await deleteFirebaseAccount();
+      // onAuthStateChanged fires → sets user to null → redirects to login
+    } catch (error) {
+      setState((prev) => ({ ...prev, isLoading: false }));
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -86,6 +102,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login: handleLogin,
         signUp: handleSignUp,
         logout: handleLogout,
+        deleteAccount: handleDeleteAccount,
       }}
     >
       {children}

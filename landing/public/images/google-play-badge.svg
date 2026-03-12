@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 168 50" width="168" height="50">
+  <rect width="168" height="50" rx="8" fill="#000"/>
+  <rect x="0.75" y="0.75" width="166.5" height="48.5" rx="7.25" fill="none" stroke="#A6A6A6" stroke-width="0.75"/>
+  <!-- Play triangle icon -->
+  <g transform="translate(12, 8)">
+    <defs>
+      <linearGradient id="playBlue" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#00C3FF"/>
+        <stop offset="100%" stop-color="#0076FF"/>
+      </linearGradient>
+      <linearGradient id="playGreen" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#00E676"/>
+        <stop offset="100%" stop-color="#00C853"/>
+      </linearGradient>
+      <linearGradient id="playRed" x1="0" y1="1" x2="1" y2="0">
+        <stop offset="0%" stop-color="#FF3A30"/>
+        <stop offset="100%" stop-color="#FF6D00"/>
+      </linearGradient>
+      <linearGradient id="playYellow" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#FFD600"/>
+        <stop offset="100%" stop-color="#FFAB00"/>
+      </linearGradient>
+    </defs>
+    <!-- Simplified play store icon -->
+    <path d="M2 3.5L17 17 2 30.5V3.5z" fill="url(#playBlue)"/>
+    <path d="M2 3.5L17 17 22 12.5 7 1 2 3.5z" fill="url(#playGreen)"/>
+    <path d="M2 30.5L17 17l5 4.5L7 33 2 30.5z" fill="url(#playRed)"/>
+    <path d="M22 12.5L17 17l5 4.5L27 17l-5-4.5z" fill="url(#playYellow)"/>
+  </g>
+  <!-- Text -->
+  <text x="48" y="17" fill="#fff" font-family="system-ui,-apple-system,sans-serif" font-size="7.5" letter-spacing="0.3">GET IT ON</text>
+  <text x="48" y="35" fill="#fff" font-family="system-ui,-apple-system,sans-serif" font-size="15" font-weight="600" letter-spacing="-0.1">Google Play</text>
+</svg>

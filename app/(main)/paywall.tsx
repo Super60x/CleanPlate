@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { PurchasesPackage } from 'react-native-purchases';
@@ -16,17 +16,18 @@ export default function PaywallScreen() {
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
+  const loadOfferings = async () => {
+    setIsLoading(true);
+    const available = await getOfferings();
+    setPackages(available);
+    const annualIdx = available.findIndex(
+      (p) => p.packageType === 'ANNUAL' || p.identifier === '$rc_annual'
+    );
+    if (annualIdx >= 0) setSelectedIndex(annualIdx);
+    setIsLoading(false);
+  };
+
   useEffect(() => {
-    async function loadOfferings() {
-      const available = await getOfferings();
-      setPackages(available);
-      // Default select annual if it exists (better value)
-      const annualIdx = available.findIndex(
-        (p) => p.packageType === 'ANNUAL' || p.identifier === '$rc_annual'
-      );
-      if (annualIdx >= 0) setSelectedIndex(annualIdx);
-      setIsLoading(false);
-    }
     loadOfferings();
   }, []);
 
@@ -126,9 +127,13 @@ export default function PaywallScreen() {
           <ActivityIndicator size="large" color={Colors.primary} style={{ marginVertical: 32 }} />
         ) : packages.length === 0 ? (
           <View style={styles.noPlans}>
+            <Ionicons name="cloud-offline-outline" size={32} color={Colors.textLight} />
             <Text style={styles.noPlansText}>
-              Subscription plans are being set up. Please check back later.
+              Unable to load subscription plans. Please check your connection and try again.
             </Text>
+            <Pressable style={styles.retryButton} onPress={loadOfferings}>
+              <Text style={styles.retryText}>Retry</Text>
+            </Pressable>
           </View>
         ) : (
           <View style={styles.plans}>
@@ -158,7 +163,12 @@ export default function PaywallScreen() {
                         ? 'Annual'
                         : 'Monthly'}
                     </Text>
-                    <Text style={styles.planPrice}>{getMonthlyPrice(pkg)}</Text>
+                    <Text style={styles.planPrice}>
+                      {getMonthlyPrice(pkg)}
+                      {(pkg.packageType === 'ANNUAL' || pkg.identifier === '$rc_annual')
+                        ? '/year'
+                        : '/month'}
+                    </Text>
                   </View>
                 </Pressable>
               );
@@ -191,9 +201,24 @@ export default function PaywallScreen() {
         {/* Legal Links */}
         <View style={styles.legal}>
           <Text style={styles.legalText}>
-            By subscribing, you agree to our Terms of Service and Privacy Policy.
-            Payment will be charged to your {Platform.OS === 'ios' ? 'Apple ID' : 'Google Play'} account. Subscription auto-renews
-            unless cancelled at least 24 hours before the end of the current period.
+            By subscribing, you agree to our{' '}
+            <Text
+              style={styles.legalLink}
+              onPress={() => Linking.openURL('https://cleanplateai.com/terms')}
+            >
+              Terms of Use
+            </Text>
+            {' '}and{' '}
+            <Text
+              style={styles.legalLink}
+              onPress={() => Linking.openURL('https://cleanplateai.com/privacy')}
+            >
+              Privacy Policy
+            </Text>
+            . Payment will be charged to your{' '}
+            {Platform.OS === 'ios' ? 'Apple ID' : 'Google Play'} account.
+            Subscription auto-renews unless cancelled at least 24 hours
+            before the end of the current period.
           </Text>
         </View>
       </ScrollView>
@@ -250,6 +275,7 @@ const styles = StyleSheet.create({
   noPlans: {
     padding: 24,
     alignItems: 'center',
+    gap: 12,
   },
   noPlansText: {
     fontSize: 14,
@@ -374,5 +400,21 @@ const styles = StyleSheet.create({
     color: Colors.textLight,
     textAlign: 'center',
     lineHeight: 16,
+  },
+  legalLink: {
+    color: Colors.primary,
+    textDecorationLine: 'underline',
+  },
+  retryButton: {
+    marginTop: 4,
+    paddingHorizontal: 24,
+    paddingVertical: 10,
+    borderRadius: 10,
+    backgroundColor: Colors.primary,
+  },
+  retryText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#FFFFFF',
   },
 });
