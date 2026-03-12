@@ -36,8 +36,7 @@
           "photosPermission": "Allow Clean Plate to access your photos to scan menus.",
           "cameraPermission": "Allow Clean Plate to take photos of restaurant menus."
         }
-      ],
-      "react-native-purchases"
+      ]
     ],
     "extra": {
       "router": {},
