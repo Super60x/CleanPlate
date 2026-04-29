@@ -32,7 +32,7 @@ const diets = ["Vegan", "Vegetarian", "Gluten-Free", "Dairy-Free", "Keto", "Low-
 
 // Store links (update these when approved)
 const appStoreUrl = "#waitlist";
-const playStoreUrl = "#waitlist";
+const playStoreUrl = "https://play.google.com/store/apps/details?id=com.cleanplateai.app";
 
 // Testimonials — diverse personas
 const testimonials = [
@@ -515,7 +515,7 @@ const testimonials = [
     const input = document.getElementById('waitlist-email') as HTMLInputElement;
     const msg = document.getElementById('waitlist-msg');
 
-    btn?.addEventListener('click', () => {
+    btn?.addEventListener('click', async () => {
       const email = input?.value?.trim();
       if (!email || !email.includes('@')) {
         if (msg) {
@@ -526,22 +526,41 @@ const testimonials = [
         return;
       }
 
-      // For now, store in localStorage + show success
-      // Replace with Buttondown API or webhook later
-      const existing = JSON.parse(localStorage.getItem('waitlist') || '[]');
-      existing.push({ email, date: new Date().toISOString() });
-      localStorage.setItem('waitlist', JSON.stringify(existing));
-
-      if (msg) {
-        msg.textContent = "You're on the list! We'll notify you when Clean Plate launches.";
-        msg.className = 'mt-3 text-sm text-primary font-medium';
-        msg.classList.remove('hidden');
-      }
-      if (input) input.value = '';
       if (btn) {
-        btn.textContent = 'Joined!';
+        btn.textContent = 'Sending...';
         btn.setAttribute('disabled', 'true');
         btn.classList.add('opacity-60');
+      }
+
+      try {
+        const res = await fetch('https://formspree.io/f/mlgzrwaj', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+
+        if (res.ok) {
+          if (msg) {
+            msg.textContent = "You're on the list! We'll notify you when Clean Plate launches.";
+            msg.className = 'mt-3 text-sm text-primary font-medium';
+            msg.classList.remove('hidden');
+          }
+          if (input) input.value = '';
+          if (btn) btn.textContent = 'Joined!';
+        } else {
+          throw new Error('Failed');
+        }
+      } catch {
+        if (msg) {
+          msg.textContent = 'Something went wrong. Please try again.';
+          msg.className = 'mt-3 text-sm text-score-red';
+          msg.classList.remove('hidden');
+        }
+        if (btn) {
+          btn.textContent = 'Notify Me';
+          btn.removeAttribute('disabled');
+          btn.classList.remove('opacity-60');
+        }
       }
     });
 
