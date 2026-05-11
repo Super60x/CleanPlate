@@ -20,6 +20,15 @@
     },
     "production": {
       "autoIncrement": true
+    },
+    "android-production": {
+      "autoIncrement": true,
+      "android": {
+        "buildType": "app-bundle"
+      }
+    },
+    "ios-production": {
+      "autoIncrement": true
     }
   },
   "submit": {
@@ -28,6 +37,17 @@
         "serviceAccountKeyPath": "./google-play-service-account.json",
         "track": "internal"
       },
+      "ios": {
+        "ascAppId": "6759740276"
+      }
+    },
+    "android-production": {
+      "android": {
+        "serviceAccountKeyPath": "./google-play-service-account.json",
+        "track": "internal"
+      }
+    },
+    "ios-production": {
       "ios": {
         "ascAppId": "6759740276"
       }

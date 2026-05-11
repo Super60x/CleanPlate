@@ -79,6 +79,66 @@ Stay pragmatic. Stay reliable. Keep learning.
 
 ---
 
+## ## Platform Branching Strategy
+
+**Non-negotiable rule: before any platform-specific work begins, branch first. Never work on iOS directly on `main`.**
+
+### Branch Structure
+- `main` — Android production state. Always buildable. Never broken. Android builds always come from here.
+- `ios-release` — all iOS work. Branched from `main`. Merged back only after Android build is verified.
+
+### Starting iOS Work
+```bash
+git checkout main
+git checkout -b ios-release
+# All iOS work happens here
+eas build --profile ios-production --platform ios
+```
+
+### Starting Android Work
+```bash
+git checkout main
+eas build --profile android-production --platform android
+```
+
+### When Android Test Is Required
+
+| What changed | Android test needed? |
+|---|---|
+| `app.config.js` plugins array | **YES** |
+| `eas.json` | **YES** |
+| New npm package with native code installed | **YES** |
+| Shared JS logic without `Platform.OS` guard | **YES** |
+| App Store Connect metadata | No |
+| TestFlight notes / screenshots | No |
+| Code behind `Platform.OS === 'ios'` | No |
+
+Do NOT run a full Android build for every small iOS change. Only test when native config is touched.
+
+### Merge Protocol (iOS → main)
+1. While on `ios-release`, run `eas build --platform android` to confirm Android still passes
+2. If Android passes → merge to `main`
+3. If Android fails → fix on `ios-release`, test again, then merge
+4. Emergency rollback: `git revert -m 1 HEAD` on `main`
+
+### Build Commands Reference
+```bash
+# iOS build + submit
+eas build --profile ios-production --platform ios --non-interactive
+eas submit --profile ios-production --platform ios
+
+# Android build + submit
+eas build --profile android-production --platform android --non-interactive
+eas submit --profile android-production --platform android
+
+# DNS fix required on this network — prefix builds with:
+NODE_OPTIONS="--require ./_dns-fix.js" eas build ...
+```
+
+See full SOP: `workflows/platform-branching.md`
+
+---
+
 ## ## CleanFoodFinder Project Memory
 
 ### Project Overview
