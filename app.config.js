@@ -28,6 +28,9 @@ module.exports = {
     ios: {
       supportsTablet: false,
       bundleIdentifier: "com.cleanplateai.app",
+      infoPlist: {
+        ITSAppUsesNonExemptEncryption: false,
+      },
     },
     android: {
       adaptiveIcon: {
