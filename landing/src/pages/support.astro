@@ -1,0 +1,182 @@
+---
+import '../styles/global.css';
+
+const siteName = "Clean Plate AI";
+const contactEmail = "support@cleanplate.app";
+---
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <title>Support — {siteName}</title>
+  <meta name="description" content="Get help with Clean Plate AI — contact our support team or browse common questions." />
+</head>
+<body class="bg-white">
+
+  <!-- Header -->
+  <header class="border-b border-border">
+    <div class="max-w-3xl mx-auto px-6 py-5 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2 text-primary-dark font-semibold text-lg no-underline">
+        ← Back to Clean Plate AI
+      </a>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="max-w-3xl mx-auto px-6 py-12">
+    <h1 class="text-3xl font-bold text-text-main mb-2">Support</h1>
+    <p class="text-text-light text-sm mb-10">We usually respond within 24 hours.</p>
+
+    <!-- Contact Form -->
+    <section class="mb-14">
+      <h2 class="text-xl font-semibold text-text-main mb-6">Send us a message</h2>
+      <form id="support-form" action="https://formspree.io/f/mlgzrwaj" method="POST" class="space-y-5">
+        <div>
+          <label for="name" class="block text-sm font-medium text-text-main mb-1">Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            placeholder="Your name"
+            class="w-full border border-border rounded-lg px-4 py-3 text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-primary-dark"
+          />
+        </div>
+        <div>
+          <label for="email" class="block text-sm font-medium text-text-main mb-1">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="your@email.com"
+            class="w-full border border-border rounded-lg px-4 py-3 text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-primary-dark"
+          />
+        </div>
+        <div>
+          <label for="subject" class="block text-sm font-medium text-text-main mb-1">Subject</label>
+          <select
+            id="subject"
+            name="subject"
+            class="w-full border border-border rounded-lg px-4 py-3 text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-primary-dark"
+          >
+            <option value="general">General question</option>
+            <option value="subscription">Subscription / billing</option>
+            <option value="account">Account issue</option>
+            <option value="bug">Bug report</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label for="message" class="block text-sm font-medium text-text-main mb-1">Message</label>
+          <textarea
+            id="message"
+            name="message"
+            required
+            rows="5"
+            placeholder="Describe your issue or question..."
+            class="w-full border border-border rounded-lg px-4 py-3 text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-primary-dark resize-none"
+          ></textarea>
+        </div>
+        <button
+          type="submit"
+          class="w-full bg-primary-dark text-white font-semibold py-3 rounded-lg hover:opacity-90 transition-opacity"
+        >
+          Send Message
+        </button>
+        <p id="form-success" class="hidden text-center text-sm text-green-600 font-medium">
+          Message sent! We'll get back to you within 24 hours.
+        </p>
+        <p id="form-error" class="hidden text-center text-sm text-red-500">
+          Something went wrong. Please email us directly at <a href={`mailto:${contactEmail}`} class="underline">{contactEmail}</a>.
+        </p>
+      </form>
+    </section>
+
+    <!-- FAQ -->
+    <section class="mb-14">
+      <h2 class="text-xl font-semibold text-text-main mb-6">Common questions</h2>
+      <div class="space-y-6">
+
+        <div>
+          <h3 class="font-semibold text-text-main mb-1">How do I cancel my subscription?</h3>
+          <p class="text-text-secondary text-sm leading-relaxed">
+            On iPhone: open Settings → tap your Apple ID → Subscriptions → Clean Plate AI → Cancel.<br/>
+            On Android: open Google Play → tap your profile → Payments & subscriptions → Subscriptions → Clean Plate AI → Cancel.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-text-main mb-1">How do I delete my account?</h3>
+          <p class="text-text-secondary text-sm leading-relaxed">
+            Open the app → Preferences → Delete Account. This permanently removes your account and all associated data.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-text-main mb-1">The scan isn't reading my menu correctly — what should I do?</h3>
+          <p class="text-text-secondary text-sm leading-relaxed">
+            Make sure the menu is well-lit and the photo is in focus. For multi-page menus, use the multi-page scan option to capture all pages together.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-text-main mb-1">I was charged but the app shows I'm not premium.</h3>
+          <p class="text-text-secondary text-sm leading-relaxed">
+            Open the app → go to the paywall screen → tap "Restore Purchases". This syncs your purchase with the app. If the issue persists, contact us below.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-text-main mb-1">Is my data private?</h3>
+          <p class="text-text-secondary text-sm leading-relaxed">
+            Yes. Menu photos are processed for analysis and not stored permanently. Your account data is only accessible to you.
+            See our <a href="/privacy" class="text-primary-dark underline">Privacy Policy</a> for full details.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Direct email fallback -->
+    <section class="bg-gray-50 rounded-xl p-6 text-center">
+      <p class="text-text-secondary text-sm">Prefer email?</p>
+      <a href={`mailto:${contactEmail}`} class="text-primary-dark font-semibold text-sm underline">{contactEmail}</a>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-border mt-12">
+    <div class="max-w-3xl mx-auto px-6 py-6 text-center text-text-light text-sm">
+      © 2026 Pxl Studio. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('support-form') as HTMLFormElement;
+    const success = document.getElementById('form-success');
+    const error = document.getElementById('form-error');
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const res = await fetch('https://formspree.io/f/mlgzrwaj', {
+        method: 'POST',
+        body: data,
+        headers: { Accept: 'application/json' },
+      });
+      if (res.ok) {
+        form.reset();
+        success?.classList.remove('hidden');
+        error?.classList.add('hidden');
+      } else {
+        error?.classList.remove('hidden');
+        success?.classList.add('hidden');
+      }
+    });
+  </script>
+
+</body>
+</html>
