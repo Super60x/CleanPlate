@@ -38,11 +38,30 @@ export default function PaywallScreen() {
 
     setIsPurchasing(true);
     try {
-      const success = await purchasePackage(pkg);
-      if (success) {
+      const result = await purchasePackage(pkg);
+
+      if (result.ok) {
         await refreshStatus();
         router.back();
+        return;
       }
+
+      // User backed out of the store sheet. Not an error, say nothing.
+      if (result.reason === 'cancelled') {
+        return;
+      }
+
+      // Charged, but the entitlement never arrived. Do not claim the purchase
+      // failed -- their card was billed. Tell them what is actually true and
+      // give them the action most likely to resolve it.
+      await refreshStatus();
+      Alert.alert(
+        'Purchase Received',
+        "Your payment went through, but we couldn't activate your subscription " +
+          'yet. This usually resolves on its own within a minute.\n\n' +
+          'Tap "Restore Purchases" to try again. If it keeps failing, contact ' +
+          'support@cleanplateai.com — you will not be charged twice.'
+      );
     } catch (error) {
       Alert.alert('Purchase Failed', 'Something went wrong. Please try again.');
     } finally {
