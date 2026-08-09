@@ -1,0 +1,33 @@
+name: typecheck
+
+# The audit found 8 TypeScript errors that had been sitting in the tree for
+# months. `tsc` had been reporting them all along -- nothing was running it.
+# This workflow is the thing that runs it.
+#
+# Caveat worth knowing: tsc resolves modules the way Node does, NOT the way
+# Metro does. A green check here does not prove the bundle Metro produces is
+# sound (see the getReactNativePersistence suppression in services/firebase.ts).
+# It catches regressions; it is not a substitute for a real build.
+
+on:
+  push:
+    branches: [main, ios-release]
+  pull_request:
+    branches: [main, ios-release]
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # .npmrc sets legacy-peer-deps=true -- required, firebase conflicts with
+      # the react-dom peer range. Without it `npm ci` fails outright.
+      - run: npm ci
+
+      - run: npm run typecheck
