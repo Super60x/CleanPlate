@@ -43,3 +43,6 @@ yarn-error.*
 
 # temp DNS fix for EAS CLI
 _dns-fix.js
+
+# disposable scratch — regenerated as needed, never a deliverable
+.tmp/
